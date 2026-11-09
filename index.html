@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Aucune connexion sortante : le navigateur refuse tout envoi ou chargement vers l'extérieur. -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src data: blob:; base-uri 'none'; form-action 'none'">
+  <title>Schéma d'architecture</title>
+  <meta name="description" content="Schéma d'architecture modifiable : base de données, batchs Spring Batch et fichiers.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231f6f54'/%3E%3Cpath d='M8 10h16M8 16h10M8 22h16' stroke='white' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <input id="title" class="title-input" aria-label="Titre du schéma" maxlength="120">
+    <span id="status" class="status" role="status"></span>
+    <div class="spacer"></div>
+    <div class="group edit-only">
+      <button id="undo" type="button" title="Annuler (Ctrl+Z)">Annuler</button>
+      <button id="redo" type="button" title="Rétablir (Ctrl+Y)">Rétablir</button>
+    </div>
+    <details class="menu edit-only" id="file-menu">
+      <summary>Fichiers</summary>
+      <div class="menu-list">
+        <button id="export-json" type="button"><b>Exporter en JSON</b><small>Enregistre le schéma dans un fichier</small></button>
+        <button id="import" type="button"><b>Importer un JSON</b><small>Ou déposez le fichier sur le schéma</small></button>
+        <button id="export-png" type="button"><b>Image PNG</b><small>Pour un document ou une diapositive</small></button>
+        <button id="export-svg" type="button"><b>Image SVG</b><small>Vectoriel, sans perte à l'agrandissement</small></button>
+        <button id="revert" type="button"><b>Repartir de l'exemple</b><small>Efface le schéma enregistré dans ce navigateur</small></button>
+      </div>
+    </details>
+    <button id="mode" type="button" class="primary">Présenter</button>
+    <input id="import-file" type="file" accept=".json,application/json" hidden>
+  </header>
+
+  <main class="layout">
+    <aside class="left" aria-label="Palette et traitements">
+      <section class="edit-only">
+        <h2>Ajouter</h2>
+        <div id="palette" class="palette"></div>
+      </section>
+      <section>
+        <h2>Traitements</h2>
+        <div id="flows" class="flows"></div>
+        <p class="hint present-only">Choisissez un batch ou un élément pour voir son rôle et ses échanges. Les touches <kbd>←</kbd> <kbd>→</kbd> passent d'un batch à l'autre.</p>
+      </section>
+    </aside>
+
+    <div class="stage" id="stage">
+      <svg id="canvas" role="img" aria-label="Schéma d'architecture">
+        <defs id="defs"></defs>
+        <rect id="grid" width="100%" height="100%" fill="url(#dots)"></rect>
+        <g id="viewport"></g>
+      </svg>
+      <div class="legend" id="legend" aria-label="Légende"></div>
+      <div class="zoom">
+        <button id="anim" type="button" aria-pressed="false" title="Animer les flux">Flux animés</button>
+        <button id="zoom-out" type="button" aria-label="Dézoomer">−</button>
+        <button id="zoom-fit" type="button" title="Afficher tout le schéma">Ajuster</button>
+        <button id="zoom-in" type="button" aria-label="Zoomer">+</button>
+      </div>
+    </div>
+
+    <aside class="right" id="inspector" aria-label="Détails"></aside>
+  </main>
+
+  <div id="toast" class="toast" role="status" hidden></div>
+  <div id="theme-probe" data-theme="light" hidden></div>
+
+  <script src="exemple.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
